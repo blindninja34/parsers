@@ -1,0 +1,196 @@
+2017-02-28 09:13:20> SYSTEM : Start method - start; error
+
+
+
+2017-02-28 09:17:41> Microlab® STAR : Load Carrier (Single Step) - progress; Error handling waiting for manual recovery!
+
+
+
+2017-02-28 09:42:29> Microlab® STAR : Load Carrier (Single Step) - error;  > position7: E:C0:05/00:Barcode..., 3204315580
+
+
+
+2017-02-28 09:42:29> Microlab® STAR : Load Carrier (Single Step) - progress; Error manually recovered by user.
+
+
+
+2017-02-28 09:42:32> Microlab® STAR : Load Carrier (Single Step) - progress; Start error handling in walkaway mode (no dialog).
+
+
+
+2017-02-28 09:42:32> Microlab® STAR : Load Carrier (Single Step) - error;  > position: 16, E:ID:09/81:Cancel, 
+
+
+
+2017-02-28 09:42:32> Microlab® STAR : Main - error; An error occurred while running Vector.  The error description is: Step canceled.  User-defined error handling will be used.  ([I0: Loading, No carrier found on loading tray.]) (0x28 - 0x1 - 0x80a) 
+
+
+
+2017-02-28 09:42:32> Microlab® STAR : Load Carrier (Single Step) - progress; Error automatically recovered depending of custom error configuration (Walk-Away).
+
+
+
+2017-02-28 09:42:32> Microlab® STAR : Load Carrier (Single Step) - complete with error; An error occurred while running Vector.  The error description is: Step canceled.  User-defined error handling will be used.  ([I0: Loading, No carrier found on loading tray.]) (0x28 - 0x1 - 0x80a)   > SMP_CAR_32_13x100_ILS_A00_0016:
+
+
+
+2017-02-28 09:43:16> Microlab® STAR : Load Carrier (Single Step) - progress; Start error handling in walkaway mode (no dialog).
+
+
+
+2017-02-28 09:43:16> Microlab® STAR : Load Carrier (Single Step) - error;  > position: 16, E:ID:09/81:Cancel, 
+
+
+
+2017-02-28 09:43:16> Microlab® STAR : Main - error; An error occurred while running Vector.  The error description is: Step canceled.  User-defined error handling will be used.  ([I0: Loading, No carrier found on loading tray.]) (0x28 - 0x1 - 0x80a) 
+
+
+
+2017-02-28 09:43:16> Microlab® STAR : Load Carrier (Single Step) - progress; Error automatically recovered depending of custom error configuration (Walk-Away).
+
+
+
+2017-02-28 09:43:16> Microlab® STAR : Load Carrier (Single Step) - complete with error; An error occurred while running Vector.  The error description is: Step canceled.  User-defined error handling will be used.  ([I0: Loading, No carrier found on loading tray.]) (0x28 - 0x1 - 0x80a)   > SMP_CAR_32_13x100_ILS_A00_0016:
+
+
+
+2017-02-28 10:05:46> TRACELEVEL : Release_TraceArray - progress; ActivateSoundForNextDialog - inputs [1]: C:\Program Files\HAMILTON\Methods\ELISA_Setup\CriticalError.wav
+
+
+
+2017-02-28 10:35:38> TRACELEVEL : Release_TraceArray - progress; ActivateSoundForNextDialog - inputs [1]: C:\Program Files\HAMILTON\Methods\ELISA_Setup\CriticalError.wav
+
+
+
+2017-02-28 10:37:36> TRACELEVEL : Release_TraceArray - progress; ActivateSoundForNextDialog - inputs [1]: C:\Program Files\HAMILTON\Methods\ELISA_Setup\CriticalError.wav
+
+
+
+2017-02-28 10:39:18> TRACELEVEL : Release_TraceArray - progress; ActivateSoundForNextDialog - inputs [1]: C:\Program Files\HAMILTON\Methods\ELISA_Setup\CriticalError.wav
+
+
+
+2017-02-28 10:47:13> Microlab® STAR : 1000ul Channel Aspirate (Single Step) - progress; Start error handling in walkaway mode (no dialog).
+
+
+
+2017-02-28 10:47:13> Microlab® STAR : 1000ul Channel Aspirate (Single Step) - error;  > channel 1: rgt_cont_120ml_BC_A00_0001, 1, E:P1:06/71:Cancel  > channel 2: rgt_cont_120ml_BC_A00_0001, 3, E:P2:06/71:Cancel  > channel 3: rgt_cont_120ml_BC_A00_0001, 4, E:P3:06/71:Cancel  > channel 4: rgt_cont_120ml_BC_A00_0001, 6, E:P4:06/71:Cancel  > channel 5: rgt_cont_120ml_BC_A00_0001, 7, E:P5:06/71:Cancel  > channel 6: rgt_cont_120ml_BC_A00_0001, 9, E:P6:06/71:Cancel  > channel 7: rgt_cont_120ml_BC_A00_0001, 10, E:P7:06/71:Cancel  > channel 8: rgt_cont_120ml_BC_A00_0001, 12, E:P8:06/71:Cancel
+
+
+
+2017-02-28 10:47:13> Microlab® STAR : Main - error; An error occurred while running Vector.  The error description is: Step canceled.  User-defined error handling will be used.  ([P1: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P2: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P3: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P4: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P5: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P6: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P7: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P8: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]) (0x28 - 0x1 - 0x80a) 
+
+
+
+2017-02-28 10:47:13> Microlab® STAR : 1000ul Channel Aspirate (Single Step) - progress; Error automatically recovered depending of custom error configuration (Walk-Away).
+
+
+
+2017-02-28 10:47:13> Microlab® STAR : 1000ul Channel Aspirate (Single Step) - complete with error; An error occurred while running Vector.  The error description is: Step canceled.  User-defined error handling will be used.  ([P1: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P2: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P3: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P4: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P5: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P6: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P7: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P8: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]) (0x28 - 0x1 - 0x80a) , 
+
+
+
+2017-02-28 10:52:20> Microlab® STAR : 1000ul Channel Aspirate (Single Step) - progress; Start error handling in walkaway mode (no dialog).
+
+
+
+2017-02-28 10:52:20> Microlab® STAR : 1000ul Channel Aspirate (Single Step) - error;  > channel 3: rgt_cont_120ml_BC_A00_0002, 4, E:P3:06/71:Cancel  > channel 5: rgt_cont_120ml_BC_A00_0002, 7, E:P5:06/71:Cancel  > channel 8: rgt_cont_120ml_BC_A00_0002, 12, E:P8:06/71:Cancel
+
+
+
+2017-02-28 10:52:20> Microlab® STAR : Main - error; An error occurred while running Vector.  The error description is: Step canceled.  User-defined error handling will be used.  ([P3: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P5: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P8: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]) (0x28 - 0x1 - 0x80a) 
+
+
+
+2017-02-28 10:52:20> Microlab® STAR : 1000ul Channel Aspirate (Single Step) - progress; Error automatically recovered depending of custom error configuration (Walk-Away).
+
+
+
+2017-02-28 10:52:20> Microlab® STAR : 1000ul Channel Aspirate (Single Step) - complete with error; An error occurred while running Vector.  The error description is: Step canceled.  User-defined error handling will be used.  ([P3: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P5: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P8: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]) (0x28 - 0x1 - 0x80a) ,  > channel 1: rgt_cont_120ml_BC_A00_0002, 1, 960 uL > channel 2: rgt_cont_120ml_BC_A00_0002, 3, 960 uL > channel 4: rgt_cont_120ml_BC_A00_0002, 6, 960 uL > channel 6: rgt_cont_120ml_BC_A00_0002, 9, 960 uL > channel 7: rgt_cont_120ml_BC_A00_0002, 10, 960 uL
+
+
+
+2017-02-28 10:57:44> Microlab® STAR : 1000ul Channel Aspirate (Single Step) - progress; Start error handling in walkaway mode (no dialog).
+
+
+
+2017-02-28 10:57:44> Microlab® STAR : 1000ul Channel Aspirate (Single Step) - error;  > channel 1: rgt_cont_120ml_BC_A00_0003, 1, E:P1:06/71:Cancel  > channel 2: rgt_cont_120ml_BC_A00_0003, 3, E:P2:06/71:Cancel  > channel 3: rgt_cont_120ml_BC_A00_0003, 4, E:P3:06/71:Cancel  > channel 4: rgt_cont_120ml_BC_A00_0003, 6, E:P4:06/71:Cancel  > channel 5: rgt_cont_120ml_BC_A00_0003, 7, E:P5:06/71:Cancel  > channel 6: rgt_cont_120ml_BC_A00_0003, 9, E:P6:06/71:Cancel  > channel 7: rgt_cont_120ml_BC_A00_0003, 10, E:P7:06/71:Cancel  > channel 8: rgt_cont_120ml_BC_A00_0003, 12, E:P8:06/71:Cancel
+
+
+
+2017-02-28 10:57:44> Microlab® STAR : Main - error; An error occurred while running Vector.  The error description is: Step canceled.  User-defined error handling will be used.  ([P1: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P2: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P3: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P4: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P5: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P6: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P7: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P8: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]) (0x28 - 0x1 - 0x80a) 
+
+
+
+2017-02-28 10:57:44> Microlab® STAR : 1000ul Channel Aspirate (Single Step) - progress; Error automatically recovered depending of custom error configuration (Walk-Away).
+
+
+
+2017-02-28 10:57:44> Microlab® STAR : 1000ul Channel Aspirate (Single Step) - complete with error; An error occurred while running Vector.  The error description is: Step canceled.  User-defined error handling will be used.  ([P1: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P2: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P3: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P4: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P5: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P6: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P7: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]  [P8: Level detection, Not enough liquid between liquid surface and bottom, submerge depth or liquid following distance too high. ]) (0x28 - 0x1 - 0x80a) , 
+
+
+
+2017-02-28 12:14:48> TRACELEVEL : Release_TraceArray - progress; ActivateSoundForNextDialog - inputs [1]: C:\Program Files\HAMILTON\Methods\ELISA_Setup\CriticalError.wav
+
+
+
+2017-02-28 12:16:02> TRACELEVEL : Release_TraceArray - progress; ActivateSoundForNextDialog - inputs [1]: C:\Program Files\HAMILTON\Methods\ELISA_Setup\CriticalError.wav
+
+
+
+2017-02-28 12:42:01> TRACELEVEL : Release_TraceArray - progress; ActivateSoundForNextDialog - inputs [1]: C:\Program Files\HAMILTON\Methods\ELISA_Setup\CriticalError.wav
+
+
+
+2017-02-28 12:46:37> TRACELEVEL : Release_TraceArray - progress; ActivateSoundForNextDialog - inputs [1]: C:\Program Files\HAMILTON\Methods\ELISA_Setup\CriticalError.wav
+
+
+
+2017-02-28 14:53:00> TRACELEVEL : Release_TraceArray - progress; ActivateSoundForNextDialog - inputs [1]: C:\Program Files\HAMILTON\Methods\ELISA_Setup\CriticalError.wav
+
+
+
+2017-02-28 14:55:33> TRACELEVEL : Release_TraceArray - progress; ActivateSoundForNextDialog - inputs [1]: C:\Program Files\HAMILTON\Methods\ELISA_Setup\CriticalError.wav
+
+
+
+2017-02-28 16:18:51> TRACELEVEL : Release_TraceArray - progress; ActivateSoundForNextDialog - inputs [1]: C:\Program Files\HAMILTON\Methods\ELISA_Setup\CriticalError.wav
+
+
+
+2017-02-28 16:19:39> TRACELEVEL : Release_TraceArray - progress; ActivateSoundForNextDialog - inputs [1]: C:\Program Files\HAMILTON\Methods\ELISA_Setup\CriticalError.wav
+
+
+
+2017-02-28 16:58:21> TRACELEVEL : Release_TraceArray - progress; ActivateSoundForNextDialog - inputs [1]: C:\Program Files\HAMILTON\Methods\ELISA_Setup\CriticalError.wav
+
+
+
+2017-02-28 16:58:56> TRACELEVEL : Release_TraceArray - progress; ActivateSoundForNextDialog - inputs [1]: C:\Program Files\HAMILTON\Methods\ELISA_Setup\CriticalError.wav
+
+
+
+2017-02-28 16:59:11> Microlab® STAR : Load Carrier (Single Step) - progress; Error handling waiting for manual recovery!
+
+
+
+2017-02-28 17:00:05> Microlab® STAR :  - progress; User action: Message box 'Cancel command' message 'If you have not specified a user-defined error handling, this action will abort the run.  Are you sure you want to do this?' was closed with button 'No'.
+
+
+
+2017-02-28 17:01:18> Microlab® STAR : Load Carrier (Single Step) - error;  > position: 46, E:ID:09/81:Repeat, 
+
+
+
+2017-02-28 17:01:18> Microlab® STAR : Load Carrier (Single Step) - progress; Error manually recovered by user.
+
+
+
+2017-02-28 17:04:29> TRACELEVEL : Release_TraceArray - progress; ActivateSoundForNextDialog - inputs [1]: C:\Program Files\HAMILTON\Methods\ELISA_Setup\CriticalError.wav
+
+
+
+2017-02-28 17:05:13> TRACELEVEL : Release_TraceArray - progress; ActivateSoundForNextDialog - inputs [1]: C:\Program Files\HAMILTON\Methods\ELISA_Setup\CriticalError.wav
+
+
+
