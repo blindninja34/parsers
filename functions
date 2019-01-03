@@ -1,0 +1,125 @@
+def LogBtn(ev):
+	if filename == '':
+		return
+
+	global btnValue
+	btnValue = 'Log'
+
+	textbox.delete('1.0', 'end') 
+	textbox.insert('1.0', open(filename, 'rt', encoding='latin1').read())
+	
+	initial_parameters()
+	if btnValue == 'Log':
+		check_log()
+	################# ДОБАВИТЬ В РЕЛИЗ!###########################>>>>>>>>>>>
+	textbox.mark_set('insert', '1.0')
+	textbox.focus()	
+	################# ДОБАВИТЬ В РЕЛИЗ!###########################<<<<<<<<<<<
+
+def BugBtn(ev):
+	if filename == '':
+		return
+		
+	global btnValue
+	btnValue = 'Bug'
+	textbox.delete('1.0', 'end') 
+	textbox.insert('1.0', open(filename, 'rt', encoding='latin1').read())
+	initial_parameters()
+	if btnValue == 'Bug':
+		check_errors()
+		
+	################# ДОБАВИТЬ В РЕЛИЗ!###########################>>>>>>>>>>>
+	textbox.mark_set('insert', '1.0')
+	textbox.focus()	
+	################# ДОБАВИТЬ В РЕЛИЗ!###########################<<<<<<<<<<<
+	
+	
+def ErlstBtn(ev):
+
+	initial_parameters()
+	#show_er_codes()
+	print_er_codes()
+	################# ДОБАВИТЬ В РЕЛИЗ!###########################>>>>>>>>>>>
+	textbox.mark_set('insert', '1.0')
+	textbox.focus()
+	################# ДОБАВИТЬ В РЕЛИЗ!###########################<<<<<<<<<<<
+
+
+################# ДОБАВИТЬ В РЕЛИЗ!###########################>>>>>>>>>>>
+#функция поиска текста, его выделения тэгом, установка курсора в начало слова, перемещение скроллбара
+def tsearch():
+	#tinput = input()
+	tinput = 'error'
+	textbox.tag_delete('finded_text')
+	
+
+	pos = textbox.search('{}'.format(tinput), '1.0', stopindex=END)
+	pos_coords = pos.split('.')
+	textbox.tag_add('finded_text', '{}'.format(pos), '{}.{}'.format(pos_coords[0], int(pos_coords[1])+len(tinput)))
+	textbox.tag_configure('finded_text',  background = "#ccff99")
+	textbox.mark_set('insert', '{}'.format(pos))
+	textbox.focus()
+	scrollbar.config(command=textbox.yview('{}.0'.format(pos_coords[0])))
+	
+### buttons
+loadBtn = Button(panelFrame, text = 'Open')
+logBtn = Button(panelFrame, text = 'Log')
+bugBtn = Button(panelFrame, text = 'Bug')
+erlstBtn = Button(panelFrame, text = 'Error codes')
+################# ДОБАВИТЬ В РЕЛИЗ!###########################>>>>>>>>>>>
+searchBtn = Button(panelFrame, text = 'Find')
+################# ДОБАВИТЬ В РЕЛИЗ!###########################<<<<<<<<<<<
+
+
+loadBtn.bind("<Button-1>", LoadFile)
+logBtn.bind("<Button-1>", LogBtn)
+bugBtn.bind("<Button-1>", BugBtn)
+erlstBtn.bind("<Button-1>", ErlstBtn)
+################# ДОБАВИТЬ В РЕЛИЗ!###########################>>>>>>>>>>>
+searchBtn.bind('<Button-1>', tsearch)
+################# ДОБАВИТЬ В РЕЛИЗ!###########################<<<<<<<<<<<
+
+loadBtn.place(x = 10, y = 3, width = 40, height = 25)
+logBtn.place(x = 60, y = 3, width = 40, height = 25)
+bugBtn.place(x = 110, y = 3, width = 40, height = 25)
+
+
+################# ДОБАВИТЬ В РЕЛИЗ!###########################>>>>>>>>>>>
+erlstBtn.place(x = 160, y = 3, width = 80, height = 25)
+################# ДОБАВИТЬ В РЕЛИЗ!###########################<<<<<<<<<<<
+
+
+
+################# ДОБАВИТЬ В РЕЛИЗ!###########################>>>>>>>>>>>
+searchBtn.place(x = 250, y = 3, width = 40, height = 25)
+
+#функция проверки был ли нажат ctrl (17) а затем а-кирилицей (70). Если оба условия выполнены то выполнить функцию tsearch
+ctrlCounter = False
+def hullo(event):
+	global ctrlCounter
+	if event.keysym == 'Control_L':
+		ctrlCounter = True
+		#print (ctrlCounter)
+	else:
+		pass
+	if ctrlCounter == True:	
+		if event.keycode == 70:	
+			print('hullo')
+			tsearch()
+			ctrlCounter = False
+		elif event.keycode == 17:
+			ctrlCounter = True
+		else:
+			ctrlCounter = False
+	else:
+		pass
+	
+#функция для вывода кодов и имен нажатий клавиш используется с _.bind('<Key>', prntKey)
+def prntKey(event):
+	print(event.keysym)
+	print(event.keycode)
+
+textbox.bind('<Control-f>', tsearch)
+textbox.bind('<Control-F>', tsearch)
+textbox.bind('<Key>', hullo)
+################# ДОБАВИТЬ В РЕЛИЗ!###########################<<<<<<<<<<<<
