@@ -310,6 +310,7 @@ def tsearch(requestString):
 		global error
 		global error_name
 		error = Tk()
+		error.title('red alert')
 		error.geometry('200x50')
 		message = Label(error, text='search no more')
 		message.pack()
@@ -322,6 +323,44 @@ def tsearch(requestString):
 		okBtn.pack()
 		okBtn.focus_set()
 		error.mainloop()
+def tsearch_revers(requestString):
+	#tinput = input()
+	
+	textbox.tag_delete('finded_text')
+	
+	global finderCounterLetter
+	global finderCounterRow
+	global pos_coords
+	try:
+		pos = textbox.search('{}'.format(requestString), '{}.{}'.format(finderCounterRow, finderCounterLetter), stopindex='1.0', backwards=True)
+		pos_coords = pos.split('.')
+	
+		textbox.tag_add('finded_text', '{}'.format(pos), '{}.{}'.format(pos_coords[0], int(pos_coords[1])+len(requestString)))
+		textbox.tag_configure('finded_text',  background = "#ccff99")
+		textbox.mark_set('insert', '{}'.format(pos))
+		textbox.focus()
+		scrollbar.config(command=textbox.yview('{}.0'.format(pos_coords[0])))
+	except:
+		global error
+		global error_name
+		error = Tk()
+		error.title('red alert')
+		error.geometry('200x50')
+		message = Label(error, text='search no more')
+		message.pack()
+		
+		okBtn = Button(error, text='Ok', command=error.destroy)
+		
+		error_name = error	
+		okBtn.bind('<Return>', destroy_error)
+		okBtn.bind('<KP_Enter>', destroy_error)
+		okBtn.pack()
+		okBtn.focus_set()
+		error.mainloop()
+		
+		
+
+
 
 def destroy_error(event):
 		global error_name
@@ -341,36 +380,53 @@ def findString(event):
 	finderCounterLetter = int(pos_coords[1]) + 1
 	finderCounterRow = int(pos_coords[0])
 	
+def findString_reverse(event):
+	requestString =  requestField.get()
+	tsearch(requestString)
+	global finderCounterLetter
+	global finderCounterRow
+	global pos_coords
+	finderCounterLetter = int(pos_coords[1]) - 1
+	finderCounterRow = int(pos_coords[0])
+	
 def createFinder(event):
 	global finderCounterLetter
 	global finderCounterRow
 	global requestField
 	global finder_name
 	global searchWindow
-	
+	print (textbox.index(INSERT))
 	searchWindow = Tk()
-	searchWindow.geometry ('450x100')
-
-	requestField = Entry(searchWindow)
-	requestField.pack()
-
-	finderCounterLetter = 0
-	finderCounterRow = 1
+	searchWindow.title ('Find')
+	searchWindow.geometry ('450x70')
+	panelFinder = Frame(searchWindow, bg = 'lightgrey')
+	panelFinder.pack(fill = X)
 	
+	requestText=Label(panelFinder, text='Search for:')
+	requestText.pack(side=LEFT)
+	requestField = Entry(panelFinder, width=48)
+	requestField.pack(side=RIGHT, pady = 10)
+	firstCoord = textbox.index(INSERT).split('.')
+	print (firstCoord[0])
+	finderCounterLetter = int(firstCoord[0])
+	finderCounterRow = int(firstCoord[1])
 	
+	previousBtn = Button (searchWindow, text = 'Previous')
 	nextBtn = Button (searchWindow, text='Next')
 	cancelBtn = Button (searchWindow, text='Cancel', command = searchWindow.destroy)
 	
 		
 	requestField.bind('<Return>', findString)
 	requestField.bind('<KP_Enter>', findString)
-		
+	
+	previousBtn.bind('<Button-1>', findString_reverse)
 	nextBtn.bind('<Button-1>', findString)
 	finder_name = searchWindow
 	#cancelBtn.bind('<Button-1>', destroy_finder)
-	
-	nextBtn.pack()
-	cancelBtn.pack()
+	cancelBtn.pack(side=RIGHT)
+	previousBtn.pack(side=RIGHT)
+	nextBtn.pack(side=RIGHT)
+
 	
 	requestField.focus()
 	
@@ -427,7 +483,7 @@ logBtn.bind("<Button-1>", LogBtn)
 bugBtn.bind("<Button-1>", BugBtn)
 erlstBtn.bind("<Button-1>", ErlstBtn)
 ################# ДОБАВИТЬ В РЕЛИЗ!###########################>>>>>>>>>>>
-searchBtn.bind('<Button-1>', tsearch)
+searchBtn.bind('<Button-1>', createFinder)
 ################# ДОБАВИТЬ В РЕЛИЗ!###########################<<<<<<<<<<<
 
 loadBtn.place(x = 10, y = 3, width = 40, height = 25)
