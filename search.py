@@ -2,11 +2,14 @@
 from tkinter import filedialog
 from tkinter import *
 import re
-import tkinter
 from erlist import *
+
 ###  VARIABLES
 filename =''
 loaded = False
+
+global requestString
+global requestField
 
 ### Buttons Functions
 
@@ -287,21 +290,92 @@ def ErlstBtn(ev):
 
 ################# ДОБАВИТЬ В РЕЛИЗ!###########################>>>>>>>>>>>
 #функция поиска текста, его выделения тэгом, установка курсора в начало слова, перемещение скроллбара
-def tsearch():
+def tsearch(requestString):
 	#tinput = input()
-	tinput = 'error'
 	textbox.tag_delete('finded_text')
 	
+	global finderCounterLetter
+	global finderCounterRow
+	global pos_coords
+	try:
+		pos = textbox.search('{}'.format(requestString), '{}.{}'.format(finderCounterRow, finderCounterLetter), stopindex=END)
+		pos_coords = pos.split('.')
+	
+		textbox.tag_add('finded_text', '{}'.format(pos), '{}.{}'.format(pos_coords[0], int(pos_coords[1])+len(requestString)))
+		textbox.tag_configure('finded_text',  background = "#ccff99")
+		textbox.mark_set('insert', '{}'.format(pos))
+		textbox.focus()
+		scrollbar.config(command=textbox.yview('{}.0'.format(pos_coords[0])))
+	except:
+		global error
+		global error_name
+		error = Tk()
+		error.geometry('200x50')
+		message = Label(error, text='search no more')
+		message.pack()
+		
+		okBtn = Button(error, text='Ok', command=error.destroy)
+		
+		error_name = error	
+		okBtn.bind('<Return>', destroy_error)
+		okBtn.bind('<KP_Enter>', destroy_error)
+		okBtn.pack()
+		okBtn.focus_set()
+		error.mainloop()
 
-	pos = textbox.search('{}'.format(tinput), '1.0', stopindex=END)
-	pos_coords = pos.split('.')
-	textbox.tag_add('finded_text', '{}'.format(pos), '{}.{}'.format(pos_coords[0], int(pos_coords[1])+len(tinput)))
-	textbox.tag_configure('finded_text',  background = "#ccff99")
-	textbox.mark_set('insert', '{}'.format(pos))
-	textbox.focus()
-	scrollbar.config(command=textbox.yview('{}.0'.format(pos_coords[0])))
+def destroy_error(event):
+		global error_name
+		error_name.destroy()
+
+#def destroy_finder(event):
+		#global searchWindow
+		#searchWindow.destroy()
+
+	
+def findString(event):
+	requestString =  requestField.get()
+	tsearch(requestString)
+	global finderCounterLetter
+	global finderCounterRow
+	global pos_coords
+	finderCounterLetter = int(pos_coords[1]) + 1
+	finderCounterRow = int(pos_coords[0])
+	
+def createFinder(event):
+	global finderCounterLetter
+	global finderCounterRow
+	global requestField
+	global finder_name
+	global searchWindow
+	
+	searchWindow = Tk()
+	searchWindow.geometry ('450x100')
+
+	requestField = Entry(searchWindow)
+	requestField.pack()
+
+	finderCounterLetter = 0
+	finderCounterRow = 1
 	
 	
+	nextBtn = Button (searchWindow, text='Next')
+	cancelBtn = Button (searchWindow, text='Cancel', command = searchWindow.destroy)
+	
+		
+	requestField.bind('<Return>', findString)
+	requestField.bind('<KP_Enter>', findString)
+		
+	nextBtn.bind('<Button-1>', findString)
+	finder_name = searchWindow
+	#cancelBtn.bind('<Button-1>', destroy_finder)
+	
+	nextBtn.pack()
+	cancelBtn.pack()
+	
+	requestField.focus()
+	
+	searchWindow.mainloop()
+		
 
 root = Tk()
 screenWidth = root.winfo_screenwidth()
@@ -392,13 +466,14 @@ def hullo(event):
 		pass
 	
 #функция для вывода кодов и имен нажатий клавиш используется с _.bind('<Key>', prntKey)
-def prntKey(event):
-	print(event.keysym)
-	print(event.keycode)
+#def prntKey(event):
+#	print(event.keysym)
+#	print(event.keycode)
 
-textbox.bind('<Control-f>', tsearch)
-textbox.bind('<Control-F>', tsearch)
-textbox.bind('<Key>', hullo)
+textbox.bind('<Control-f>', createFinder)
+textbox.bind('<Control-F>', createFinder)
+#textbox.bind('<Key>', prntKey)
+#textbox.bind('<Return>', )
 ################# ДОБАВИТЬ В РЕЛИЗ!###########################<<<<<<<<<<<<
 
 root.mainloop()
