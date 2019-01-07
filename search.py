@@ -12,11 +12,6 @@ global requestString
 global requestField
 
 ### Buttons Functions
-
-#Quit fu
-def Quit(ev):
-	global root
-	root.destroy()
 #Load file and see bugs
 def initial_parameters():
 	textbox2.delete('1.0', 'end')
@@ -38,7 +33,6 @@ def initial_parameters():
 			textbox2.insert('{}.54'.format(stringNum), line[59:])
 
 		stringNum += 1
-	
 
 def show_er_codes():
 	textbox3.delete('1.0', 'end')
@@ -216,7 +210,6 @@ def check_log():
 		k += 1
 	logfile.close
 
-
 def LoadFile(ev):
 	#global names
 
@@ -256,8 +249,6 @@ def LogBtn(ev):
 	textbox.mark_set('insert', '1.0')
 	textbox.focus()	
 	################# ДОБАВИТЬ В РЕЛИЗ!###########################<<<<<<<<<<<
-		
-
 
 def BugBtn(ev):
 	if filename == '':
@@ -276,7 +267,6 @@ def BugBtn(ev):
 	textbox.focus()	
 	################# ДОБАВИТЬ В РЕЛИЗ!###########################<<<<<<<<<<<
 	
-	
 def ErlstBtn(ev):
 
 	initial_parameters()
@@ -287,66 +277,51 @@ def ErlstBtn(ev):
 	textbox.focus()
 	################# ДОБАВИТЬ В РЕЛИЗ!###########################<<<<<<<<<<<
 
-
 ################# ДОБАВИТЬ В РЕЛИЗ!###########################>>>>>>>>>>>
 #функция поиска текста, его выделения тэгом, установка курсора в начало слова, перемещение скроллбара
 def tsearch(requestString):
-	#tinput = input()
-	textbox.tag_delete('finded_text')
-	
-	global finderCounterLetter
-	global finderCounterRow
+	global finderLetterCoord
+	global finderRowCoord
 	global pos_coords
+	#try to seach text 'requestString'; if there is no such text - rise error window 
+	#starts with coords finderRowCoord and LetterCoord (initially these coords are 1.0 but they are changing as user moves coursor) 
+	#ends with END index, no case sensitivity
 	try:
-		pos = textbox.search('{}'.format(requestString), '{}.{}'.format(finderCounterRow, finderCounterLetter), stopindex=END)
+		pos = textbox.search( 
+							 '{}'.format(requestString),
+							 '{}.{}'.format(finderRowCoord, finderLetterCoord),
+							 stopindex=END,
+							 nocase = 1
+		)
 		pos_coords = pos.split('.')
-	
-		textbox.tag_add('finded_text', '{}'.format(pos), '{}.{}'.format(pos_coords[0], int(pos_coords[1])+len(requestString)))
-		textbox.tag_configure('finded_text',  background = "#ccff99")
+		#text found, coords are defined, try to set up a tag but before delete tags from previous search: (tag_name, start_coord, end_coord)
+		textbox.tag_delete('found_text')	
+		textbox.tag_add(
+						'found_text',
+						'{}'.format(pos),
+						'{}.{}'.format(pos_coords[0], int(pos_coords[1])+len(requestString))
+		)
+		#color of found text is ccff99 - lblue
+		textbox.tag_configure('found_text', background = "#ccff99")
+		#move coursor to the beginning of found text and focus on textbox to move scrollbar
+		#scrollbar move has a shift of 5 rows, but if there is no 5 vacation rows script just passes it
 		textbox.mark_set('insert', '{}'.format(pos))
 		textbox.focus()
-		scrollbar.config(command=textbox.yview('{}.0'.format(pos_coords[0])))
+		try:
+			scrollbar.config(command=textbox.yview('{}.0'.format(int(pos_coords[0])-5)))
+		except:
+			pass
 	except:
 		global error
 		global error_name
+		#create new window
+		#with message text
+		#and OK button with focus on it.
+		#If Enter is pressed window is closed
 		error = Tk()
 		error.title('red alert')
 		error.geometry('200x50')
-		message = Label(error, text='search no more')
-		message.pack()
-		
-		okBtn = Button(error, text='Ok', command=error.destroy)
-		
-		error_name = error	
-		okBtn.bind('<Return>', destroy_error)
-		okBtn.bind('<KP_Enter>', destroy_error)
-		okBtn.pack()
-		okBtn.focus_set()
-		error.mainloop()
-def tsearch_revers(requestString):
-	#tinput = input()
-	
-	textbox.tag_delete('finded_text')
-	
-	global finderCounterLetter
-	global finderCounterRow
-	global pos_coords
-	try:
-		pos = textbox.search('{}'.format(requestString), '{}.{}'.format(finderCounterRow, finderCounterLetter), stopindex='1.0', backwards=True)
-		pos_coords = pos.split('.')
-	
-		textbox.tag_add('finded_text', '{}'.format(pos), '{}.{}'.format(pos_coords[0], int(pos_coords[1])+len(requestString)))
-		textbox.tag_configure('finded_text',  background = "#ccff99")
-		textbox.mark_set('insert', '{}'.format(pos))
-		textbox.focus()
-		scrollbar.config(command=textbox.yview('{}.0'.format(pos_coords[0])))
-	except:
-		global error
-		global error_name
-		error = Tk()
-		error.title('red alert')
-		error.geometry('200x50')
-		message = Label(error, text='search no more')
+		message = Label(error, text='text was not found')
 		message.pack()
 		
 		okBtn = Button(error, text='Ok', command=error.destroy)
@@ -358,40 +333,76 @@ def tsearch_revers(requestString):
 		okBtn.focus_set()
 		error.mainloop()
 		
+def tsearch_reverse(requestString):
+	global finderLetterCoord
+	global finderRowCoord
+	global pos_coords
+	try:
+		#the only difference between regular search is bacwards=True option for th reverse search
+		#this fuu need to be combined with tsearch somehow
+		pos = textbox.search(
+							 '{}'.format(requestString),
+							 '{}.{}'.format(finderRowCoord,finderLetterCoord),
+							 stopindex='1.0',
+							 backwards=True,
+							 nocase = 1
+		)
+		pos_coords = pos.split('.')
+		textbox.tag_delete('found_text')	
+		textbox.tag_add(
+						'found_text', 
+						'{}'.format(pos), 
+						'{}.{}'.format(pos_coords[0], int(pos_coords[1])+len(requestString))
+		)
+		textbox.tag_configure('found_text',  background = "#ccff99")
+		textbox.mark_set('insert', '{}'.format(pos))
+		textbox.focus()
+		scrollbar.config(command=textbox.yview('{}.0'.format(int(pos_coords[0])-5)))
+	except:
+		global error
+		global error_name
+		error = Tk()
+		error.title('red alert')
+		error.geometry('200x50')
+		message = Label(error, text='text was not found')
+		message.pack()
 		
-
-
+		okBtn = Button(error, text='Ok', command=error.destroy)
+		
+		error_name = error	
+		okBtn.bind('<Return>', destroy_error)
+		okBtn.bind('<KP_Enter>', destroy_error)
+		okBtn.pack()
+		okBtn.focus_set()
+		error.mainloop()
 
 def destroy_error(event):
 		global error_name
 		error_name.destroy()
 
-#def destroy_finder(event):
-		#global searchWindow
-		#searchWindow.destroy()
-
-	
 def findString(event):
 	requestString =  requestField.get()
+
 	tsearch(requestString)
-	global finderCounterLetter
-	global finderCounterRow
+
+	global finderLetterCoord
+	global finderRowCoord
 	global pos_coords
-	finderCounterLetter = int(pos_coords[1]) + 1
-	finderCounterRow = int(pos_coords[0])
+	finderLetterCoord = int(pos_coords[1]) + 1
+	finderRowCoord = int(pos_coords[0])
 	
 def findString_reverse(event):
 	requestString =  requestField.get()
-	tsearch(requestString)
-	global finderCounterLetter
-	global finderCounterRow
+	tsearch_reverse(requestString)
+	global finderLetterCoord
+	global finderRowCoord
 	global pos_coords
-	finderCounterLetter = int(pos_coords[1]) - 1
-	finderCounterRow = int(pos_coords[0])
+	finderLetterCoord = int(pos_coords[1]) - 1
+	finderRowCoord = int(pos_coords[0])
 	
 def createFinder(event):
-	global finderCounterLetter
-	global finderCounterRow
+	global finderLetterCoord
+	global finderRowCoord
 	global requestField
 	global finder_name
 	global searchWindow
@@ -399,40 +410,47 @@ def createFinder(event):
 	searchWindow = Tk()
 	searchWindow.title ('Find')
 	searchWindow.geometry ('450x70')
-	panelFinder = Frame(searchWindow, bg = 'lightgrey')
+	
+	panelFinder = Frame(searchWindow)
 	panelFinder.pack(fill = X)
+	
+	panelFinder2 = Frame(searchWindow)
+	panelFinder2.pack(fill = X, side = BOTTOM)
 	
 	requestText=Label(panelFinder, text='Search for:')
 	requestText.pack(side=LEFT)
+	
 	requestField = Entry(panelFinder, width=48)
 	requestField.pack(side=RIGHT, pady = 10)
+	
+	
 	firstCoord = textbox.index(INSERT).split('.')
-	print (firstCoord[0])
-	finderCounterLetter = int(firstCoord[0])
-	finderCounterRow = int(firstCoord[1])
+	finderLetterCoord = int(firstCoord[0])
+	finderRowCoord = int(firstCoord[1])
 	
-	previousBtn = Button (searchWindow, text = 'Previous')
-	nextBtn = Button (searchWindow, text='Next')
-	cancelBtn = Button (searchWindow, text='Cancel', command = searchWindow.destroy)
+
+	previousBtn = Button (panelFinder2, text = 'Previous')
+	nextBtn = Button (panelFinder2, text='Next')
+	cancelBtn = Button (panelFinder2, text='Cancel', command = searchWindow.destroy)
 	
-		
 	requestField.bind('<Return>', findString)
 	requestField.bind('<KP_Enter>', findString)
 	
 	previousBtn.bind('<Button-1>', findString_reverse)
 	nextBtn.bind('<Button-1>', findString)
 	finder_name = searchWindow
-	#cancelBtn.bind('<Button-1>', destroy_finder)
+	
 	cancelBtn.pack(side=RIGHT)
 	previousBtn.pack(side=RIGHT)
 	nextBtn.pack(side=RIGHT)
-
+	
+	hintText = Label(panelFinder2, text = 'Hint: try Ctrl-F', font='TkDefaultFont 7', fg='#ebebeb')	
+	hintText.pack(side = LEFT)
 	
 	requestField.focus()
 	
 	searchWindow.mainloop()
 		
-
 root = Tk()
 screenWidth = root.winfo_screenwidth()
 screenHeight = root.winfo_screenheight()
@@ -474,7 +492,8 @@ logBtn = Button(panelFrame, text = 'Log')
 bugBtn = Button(panelFrame, text = 'Bug')
 erlstBtn = Button(panelFrame, text = 'Error codes')
 ################# ДОБАВИТЬ В РЕЛИЗ!###########################>>>>>>>>>>>
-searchBtn = Button(panelFrame, text = 'Find')
+#unicode_string=u'\u2315'
+searchBtn = Button(panelFrame, text = 'Find')#, text = unicode_string)
 ################# ДОБАВИТЬ В РЕЛИЗ!###########################<<<<<<<<<<<
 
 
