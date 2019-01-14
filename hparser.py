@@ -104,10 +104,6 @@ def initial_parameters(filename):
 		if '' in line:
 			textbox2.insert('{}.1'.format(stringNum), '')			
 			
-				
-#		if '' in line:
-#			textbox2.insert('{}.1'.format(stringNum), '')	
-
 		stringNum += 1
 	
 
@@ -200,6 +196,9 @@ def check_errors(filename):
 		k += 1
 	logfile.close
 	show_er_codes()
+	
+	textbox.mark_set('insert', '1.0')
+	textbox.focus()
 
 def check_log(filename):
 	logfile = open(filename, 'rt', encoding='latin1')
@@ -299,9 +298,10 @@ def LoadFile(ev):
 		check_errors(filename)
 	initial_parameters(filename)	
 	print ("Парсинг логфайла завершен")
-	
+	root.update_idletasks()
+	#root.focus_force()
 	textbox.mark_set('insert', '1.0')
-	textbox.focus()	
+	textbox.focus()
 
 def LogBtn(ev):
 	if filename == '':
@@ -353,139 +353,153 @@ def tsearch(requestString):
 	#try to seach text 'requestString'; if there is no such text - rise error window 
 	#starts with coords finderRowCoord and LetterCoord (initially these coords are 1.0 but they are changing as user moves coursor) 
 	#ends with END index, no case sensitivity
-	if searchAgain == True:
-		try:
-			#pos = textbox.search('{}'.format(requestString), '{}.{}'.format(finderRowCoord, finderLetterCoord), stopindex=END, nocase = 1)
-			start = '{}.{}'.format(finderRowCoord,finderLetterCoord)
-			pos = textbox.search('{}'.format(requestString), start, stopindex=END, nocase =1)
-			pos_coords = pos.split(".")
-			#text found, coords are defined, try to set up a tag but before delete tags from previous search: (tag_name, start_coord, end_coord)
-			textbox.tag_delete('found_text')	
-			textbox.tag_add('found_text','{}'.format(pos), '{}.{}'.format(pos_coords[0], int(pos_coords[1])+len(requestString)))
-			#color of found text is ccff99 - lblue
-			textbox.tag_configure('found_text', background = "#ccff99")
-			#move coursor to the beginning of found text and focus on textbox to move scrollbar
-			#scrollbar move has a shift of 5 rows, but if there is no 5 vacation rows script just passes it
-			textbox.mark_set('insert', '{}'.format(pos))
-	
-			textbox.focus()
-			try:
-				scrollbar.config(command=textbox.yview('{}.0'.format(int(pos_coords[0])-5)))
-			except:
-				pass
-		except:
-			global error
-			global error_name
-
-			#create new window
-			#with message text
-			#and OK button with focus on it.
-			#If Enter is pressed window is closed
-			error = Tk()
-			error.update_idletasks()
-			error.focus_force()
-			error.title('red alert')
-			error.geometry('200x50')
-			message = Label(error, text='text was not found')
-			message.pack()
-			searchAgain = False
-			okBtn = Button(error, text='Ok', command=error.destroy)
-			
-			error_name = error	
-			okBtn.bind('<Return>', destroy_error)
-			okBtn.bind('<KP_Enter>', destroy_error)
-			okBtn.pack()
-	
-			okBtn.focus_set()
-			error.mainloop()
+	print (searchAgain)
+	try:
+	#pos = textbox.search('{}'.format(requestString), '{}.{}'.format(finderRowCoord, finderLetterCoord), stopindex=END, nocase = 1)
+		start = '{}.{}'.format(finderRowCoord,finderLetterCoord)
+		pos = textbox.search('{}'.format(requestString), start, stopindex=END, nocase =1)
+		pos_coords = pos.split(".")
+		print (pos_coords)
 		
+		#text found, coords are defined, try to set up a tag but before delete tags from previous search: (tag_name, start_coord, end_coord)
+		textbox.tag_delete('found_text')	
+		textbox.tag_add('found_text','{}'.format(pos), '{}.{}'.format(pos_coords[0], int(pos_coords[1])+len(requestString)))
+		#color of found text is ccff99 - lblue
+		textbox.tag_configure('found_text', background = "#ccff99")
+		#move coursor to the beginning of found text and focus on textbox to move scrollbar
+		#scrollbar move has a shift of 5 rows, but if there is no 5 vacation rows script just passes it
+		textbox.mark_set('insert', '{}'.format(pos))
+	
+		textbox.focus()
+		try:
+			scrollbar.config(command=textbox.yview('{}.0'.format(int(pos_coords[0])-5)))
+		except:
+			pass
+	except:
+		global error
+		global error_name
+		
+		#create new window
+		#with message text
+		#and OK button with focus on it.
+		#If Enter is pressed window is closed
+		searchAgain = False
+		error = Tk()
+		error.update_idletasks()
+		error.focus_force()
+		error.title('red alert')
+		error.geometry('200x50')
+		message = Label(error, text='text was not found')
+		message.pack()
+		
+		okBtn = Button(error, text='Ok')
+		error_name = error	
+		okBtn.pack()
+		okBtn.focus_set()
+		okBtn.bind('<Key>', destroy_error)
+		okBtn.bind('<Button-1>', destroy_error)
+		error.mainloop()
+			
 def tsearch_reverse(requestString):
 	global finderLetterCoord
 	global finderRowCoord
 	global pos_coords
 	global searchAgain
-	if searchAgain == True:
+
+	try:
+
+		#the only difference between regular search is bacwards=True option for th reverse search
+		#this fuu need to be combined with tsearch somehow
+		start = '{}.{}'.format(finderRowCoord,finderLetterCoord)
+		pos = textbox.search(
+							 '{}'.format(requestString),
+							 start,
+							 stopindex='1.0',
+							 backwards=True,
+							 nocase = 1
+		)
+		pos_coords = pos.split('.')
+		textbox.tag_delete('found_text')	
+		textbox.tag_add(
+						'found_text', 
+						'{}'.format(pos), 
+						'{}.{}'.format(pos_coords[0], int(pos_coords[1])+len(requestString))
+		)
+		textbox.tag_configure('found_text',  background = "#ccff99")
+		textbox.mark_set('insert', '{}'.format(pos))
+		textbox.focus()
 		try:
-			print (searchAgain)
-			#the only difference between regular search is bacwards=True option for th reverse search
-			#this fuu need to be combined with tsearch somehow
-			start = '{}.{}'.format(finderRowCoord,finderLetterCoord)
-		
-			pos = textbox.search(
-								 '{}'.format(requestString),
-								 start,
-								 stopindex='1.0',
-								 backwards=True,
-								 nocase = 1
-			)
-			pos_coords = pos.split('.')
-			
-			textbox.tag_delete('found_text')	
-			textbox.tag_add(
-							'found_text', 
-							'{}'.format(pos), 
-							'{}.{}'.format(pos_coords[0], int(pos_coords[1])+len(requestString))
-			)
-			textbox.tag_configure('found_text',  background = "#ccff99")
-			textbox.mark_set('insert', '{}'.format(pos))
-			textbox.focus()
 			scrollbar.config(command=textbox.yview('{}.0'.format(int(pos_coords[0])-5)))
-				
 		except:
-			global errorCounter
-			errorcounter = 1
-			global error
-			global error_name
-			error = Tk()
-			error.update_idletasks()
-			error.focus_force()
-			error.title('red alert')
-			error.geometry('200x50')
-			message = Label(error, text='text was not found')
-			message.pack()
-			searchAgain = False
-			okBtn = Button(error, text='Ok', command=error.destroy)
-			error_name = error	
-			okBtn.bind('<Return>', destroy_error_reverse)
-			okBtn.bind('<KP_Enter>', destroy_error_reverse)
-			okBtn.pack()
-			okBtn.focus_set()
-			error.mainloop()
-		
+			pass
+	except:
+		global errorCounter
+		errorcounter = 1
+		global error
+		global error_name
+		error = Tk()
+		error.update_idletasks()
+		error.focus_force()
+		error.title('red alert')
+		error.geometry('200x50')
+		message = Label(error, text='text was not found')
+		message.pack()
+		searchAgain = False
+		okBtn = Button(error, text='Ok')
+		okBtn.pack()
+		okBtn.focus_set()
+		error_name = error	
+		okBtn.bind('<Key>', destroy_error)
+		okBtn.bind('<Button-1>', destroy_error)
+		error.mainloop()
+			
 
 def destroy_error(event):
 		global error_name
 		global searchAgain
-		error_name.destroy()
 		searchAgain = True
-		
-def destroy_error_reverse(event):
-		global error_name
-		global searchAgain
+		#print ('destroy'+str(searchAgain))
 		error_name.destroy()
-		searchAgain = True
-
 		
+				
 def findString(event):
 	requestString =  requestField.get()
-	tsearch(requestString)
-
+	global searchAgain
+	if searchAgain == True:
+		tsearch(requestString)
+	else:
+		print('wrong searchAgain: ' + str(searchAgain))
+	
 	global finderLetterCoord
 	global finderRowCoord
 	global pos_coords
-	finderRowCoord = int(pos_coords[0])
-	finderLetterCoord = int(pos_coords[1]) + 1
-
-
-	
+	if pos_coords != ['']:
+		finderRowCoord = int(pos_coords[0])
+		finderLetterCoord = int(pos_coords[1]) + 1
+		searchAgain = True
+	else:
+		finderRowCoord = 1
+		finderLetterCoord = 0
+		
+		
 def findString_reverse(event):
 	requestString =  requestField.get()
-	tsearch_reverse(requestString)
+	global searchAgain
+	if searchAgain == True:
+		tsearch_reverse(requestString)
+	else:
+		print('wrong searchAgain: ' + str(searchAgain))
+	
 	global finderLetterCoord
 	global finderRowCoord
 	global pos_coords
-	finderRowCoord = int(pos_coords[0])
-	finderLetterCoord = int(pos_coords[1]) - 1
+	if pos_coords != ['']:
+		finderRowCoord = int(pos_coords[0])
+		finderLetterCoord = int(pos_coords[1]) - 1
+		searchAgain = True
+	else:
+		finderRowCoord = 1
+		finderLetterCoord = 0
 
 	
 def createFinder(event):
@@ -541,7 +555,7 @@ def createFinder(event):
 	searchWindow.mainloop()
 
 root = Tk()
-root.title('HParser v0.5')
+root.title('HParser v0.5c')
 root.minsize(800, 500)
 root.state("zoomed")
 #root.update_idletasks()
@@ -640,7 +654,10 @@ textbox.bind('<Control-f>', createFinder)
 textbox.bind('<Control-F>', createFinder)
 #textbox.bind('<Key>', prntKey)
 #textbox.bind('<Return>', )
+################# ДОБАВИТЬ В РЕЛИЗ!###########################<<<<<<<<<<<<
 
+
+#блок для открытия файлов программой (open with)
 if len(sys.argv) > 1:
 	try:
 		path = sys.argv[1]
@@ -652,5 +669,6 @@ if len(sys.argv) > 1:
 	except Exception as ex:
 		print (ex)
 		print ('error')
+
 
 root.mainloop()
