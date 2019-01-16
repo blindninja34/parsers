@@ -16,6 +16,22 @@ global requestField
 global searchAgain
 searchAgain = True
 
+class Errors:
+	
+	def mark_error(self, error_type, row):
+		
+		textbox.tag_add('yellow', '{}.0'.format(row), '{}.end'.format(row))
+		textbox.tag_configure('yellow',  background = "yellow")
+		
+	def insert_error(self, error_type, string, row):
+	
+		textbox.insert('{}.0'.format(row), string)
+		textbox.insert('{}.0'.format(row + 1), "***\n\n")
+						
+		row += 3
+
+
+
 ### Buttons Functions
 #Load file and see bugs
 def initial_parameters(filename):
@@ -29,7 +45,7 @@ def initial_parameters(filename):
 	counter4 = 0
 	for line in logfile:
 		
-
+		
 		if 'TRACELEVEL : Trace_02 - complete; o_strWorkingMode' in line:
 			textbox2.insert('{}.1'.format(stringNum), 'Режим работы'+line[71:])
 		if 'TRACELEVEL : Trace_02 - complete; o_strExtractionKitName' in line:
@@ -110,16 +126,21 @@ def initial_parameters(filename):
 def show_er_codes():
 
 	textbox3.delete('1.0', 'end')
-	j = 1
-	for rows in textbox.get('1.0', 'end-1c').splitlines():
-		result = re.findall('\d{2,3}'+'/'+'\d{2,3}', rows)
-	
+	row = 1
+	i = 1
+		
+	for lines in textbox.get('1.0', 'end-1c').splitlines():
+		result = re.findall('\d{2,3}'+'/'+'\d{2,3}', lines)
+		
 		if not result:
 			pass
-		else:	
-			textbox3.insert('{}.0'.format(j), result)
-			textbox3.insert('{}.0'.format(j+1),  "\n***\n\n")
-			j += 3
+		else:
+			pos = textbox3.search(result, '1.0', stopindex = END)
+			if pos == '':
+				textbox3.insert('{}.0'.format(row), result)
+				textbox3.insert('{}.0'.format(row+1),  "\n***\n\n")
+				row += 3
+
 
 def print_er_codes():
 		
@@ -127,73 +148,33 @@ def print_er_codes():
 	textbox.insert('1.0', erlist.text_import())
 
 def check_errors(filename):
-
-	logfile = open(filename, 'rt', encoding = 'latin1')
-	error = "error"
-	Error = "Error"
-	no_Error = "No Error"
-	no_error = "No Error"
-	warning = "Warning"
-
-	i = 1
-	k = 1
-	j = 1
 	textbox.delete('1.0', 'end')
 	
+	i = 1
+	row = 1
+	j = 1
+	
+	strError = Errors()
+	
+	logfile = open(filename, 'rt', encoding = 'latin1')
 	for line in logfile:
 		if "intErrorID" not in line:
 			if "End method - progress; Object referenced:" not in line:
-				if Error in line:
-					textbox.insert('{}.0'.format(i), line)
-					textbox.insert('{}.0'.format(i+1), "***\n\n")
-									
-					textbox.tag_add('yellow', '{}.0'.format(k), '{}.end'.format(k))
-					textbox.tag_configure('yellow',  background = "yellow")
-					i += 3
-					
-				if error in line:
-					textbox.insert('{}.0'.format(i), line)
-					textbox.insert('{}.0'.format(i+1), "***\n\n")
-					
-					textbox.tag_add('yellow', '{}.0'.format(k), '{}.end'.format(k))
-					textbox.tag_configure('yellow',  background = "yellow")
-					i += 3
-					
-				if "	error;  >" in line:
-					textbox.insert('{}.0'.format(i), line)
-					textbox.insert('{}.0'.format(i+1),  "***\n\n")
-					
-					textbox.tag_add('yellow', '{}.0'.format(k), '{}.end'.format(k))
-					textbox.tag_configure('yellow',  background = "yellow")
-					i += 3
-					
-				if "walkaway mode (no dialog)" in line:
-					textbox.insert('{}.0'.format(i), line)
-					textbox.insert('{}.0'.format(i+1),  "***\n\n")
-					
-					textbox.tag_add('yellow', '{}.0'.format(k), '{}.end'.format(k))
-					textbox.tag_configure('yellow',  background = "yellow")
-					i += 3	
+				
+				error_type = (  
+								'error', 
+								'Error',
+								'walkaway mode (no dialog)',
+								'Main - error; An error occurred',
+								'Method has been aborted',
+								'Warning'
+				)
+				
+				for k in range(len(error_type)-1):
+					if error_type[k] in line:
+						strError.insert_error(error_type[k], line, row)
 						
-				if "Main - error; An error occurred while running Vector" in line:
-					#parsefile.write(line+'\n\n\n')
-					textbox.insert('{}.0'.format(i), line)
-					textbox.insert('{}.0'.format(i+1),  "***\n\n")
-					
-					textbox.tag_add('yellow', '{}.0'.format(k), '{}.end'.format(k))
-					textbox.tag_configure('yellow',  background = "yellow")
-					i += 3	
-										
-				if "Method has been aborted " in line:
-					#parsefile.write(line+'\n\n\n')
-					textbox.insert('{}.0'.format(i), line)
-					textbox.insert('{}.0'.format(i+2), "***\n\n")
-	
-					textbox.tag_add('yellow', '{}.0'.format(k), '{}.end'.format(k))
-					textbox.tag_configure('yellow',  background = "yellow")				
-					i +=3
-
-		k += 1
+		row += 1
 	logfile.close
 	show_er_codes()
 	
@@ -201,81 +182,30 @@ def check_errors(filename):
 	textbox.focus()
 
 def check_log(filename):
+	
 	logfile = open(filename, 'rt', encoding='latin1')
-	error = "error"
-	Error = "Error"
-	no_Error = "No Error"
-	no_error = "No Error"
-	warning = "Warning"
-	i = 1
-	k = 1
 
-	#textbox.delete('1.0', 'end')
+	row = 1
+	k = 0
 
-	#textbox3.delete('1.0', 'end') 
-	for line in logfile:
-		if "intErrorID" not in line:
+	strError = Errors()
+	for lines in logfile:
+		if "intErrorID" not in lines:
 			
+			error_type = (  
+							'error', 
+							'Error',
+							'walkaway mode (no dialog)',
+							'Main - error; An error occurred',
+							'Method has been aborted',
+							'Warning'
+			)
 			
-			if Error in line:
-				#textbox.insert('{}.0'.format(i), line)
-				#textbox.insert('{}.0'.format(i+1), "***\n\n")
-								
-				textbox.tag_add('yellow', '{}.0'.format(k), '{}.end'.format(k))
-				textbox.tag_configure('yellow',  background = "yellow")
-				i += 3
-				
-			if error in line:
-				#textbox.insert('{}.0'.format(i), line)
-				#textbox.insert('{}.0'.format(i+1), "***\n\n")
-				
-				textbox.tag_add('yellow', '{}.0'.format(k), '{}.end'.format(k))
-				textbox.tag_configure('yellow',  background = "yellow")
-				i += 3
-				
-			if "	error;  >" in line:
-				#textbox.insert('{}.0'.format(i), line)
-				#textbox.insert('{}.0'.format(i+1),  "***\n\n")
-				
-				textbox.tag_add('yellow', '{}.0'.format(k), '{}.end'.format(k))
-				textbox.tag_configure('yellow',  background = "yellow")
-				i += 3
-				
-			if "walkaway mode (no dialog)" in line:
-				#textbox.insert('{}.0'.format(i), line)
-				#textbox.insert('{}.0'.format(i+1),  "***\n\n")
-				
-				textbox.tag_add('yellow', '{}.0'.format(k), '{}.end'.format(k))
-				textbox.tag_configure('yellow',  background = "yellow")
-				i += 3	
-					
-			if "Main - error; An error occurred while running Vector" in line:
-				#parsefile.write(line+'\n\n\n')
-				#textbox.insert('{}.0'.format(i), line)
-				#textbox.insert('{}.0'.format(i+1),  "***\n\n")
-				
-				textbox.tag_add('yellow', '{}.0'.format(k), '{}.end'.format(k))
-				textbox.tag_configure('yellow',  background = "yellow")
-				i += 3	
-									
-			if "Method has been aborted " in line:
-				#parsefile.write(line+'\n\n\n')
-				#textbox.insert('{}.0'.format(i), line)
-				#textbox.insert('{}.0'.format(i+2), "***\n\n")
-
-				textbox.tag_add('yellow', '{}.0'.format(k), '{}.end'.format(k))
-				textbox.tag_configure('yellow',  background = "yellow")				
-				i +=3
-									
-			if warning in line:
-				#textbox.insert('{}.0'.format(i), line)
-				#textbox.insert('{}.0'.format(i+1),  "***\n\n")
-				
-				textbox.tag_add('yellow', '{}.0'.format(k), '{}.end'.format(k))
-				textbox.tag_configure('yellow',  background = "yellow")
-				i += 3
-				
-		k += 1
+			for k in range(len(error_type)-1):
+				if error_type[k] in lines:
+					strError.mark_error(error_type[k], row)
+			row += 1
+			
 	logfile.close	
 
 def LoadFile(ev):
@@ -357,7 +287,7 @@ def tsearch(requestString):
 	try:
 	#pos = textbox.search('{}'.format(requestString), '{}.{}'.format(finderRowCoord, finderLetterCoord), stopindex=END, nocase = 1)
 		start = '{}.{}'.format(finderRowCoord,finderLetterCoord)
-		pos = textbox.search('{}'.format(requestString), start, stopindex=END, nocase =1)
+		pos = textbox.search('{}'.format(requestString), start, stopindex=END)#, nocase =1)
 		pos_coords = pos.split(".")
 		print (pos_coords)
 		
@@ -654,8 +584,6 @@ textbox.bind('<Control-f>', createFinder)
 textbox.bind('<Control-F>', createFinder)
 #textbox.bind('<Key>', prntKey)
 #textbox.bind('<Return>', )
-################# ДОБАВИТЬ В РЕЛИЗ!###########################<<<<<<<<<<<<
-
 
 #блок для открытия файлов программой (open with)
 if len(sys.argv) > 1:
