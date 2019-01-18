@@ -1,29 +1,40 @@
 from tkinter import filedialog
 from tkinter import *
 import re
-import erlist
 import subprocess
 import encodings
 import os, sys
 
 ###  VARIABLES
 
-filename = ''
-loaded = False
 
 global requestString
 global requestField
 global searchAgain
+global error_type
+
+filename = ''
+loaded = False
 searchAgain = True
+error_type = (  
+				'error', 
+				'Error',
+				'walkaway mode (no dialog)',
+				'Main - error; An error occurred',
+				'Method has been aborted',
+				'Warning'
+				#'add here any specific text to be found as error'
+)
+
 
 class Errors:
-	
-	def mark_error(self, error_type, row):
+
+	def mark_error(self, row):
 		
 		textbox.tag_add('yellow', '{}.0'.format(row), '{}.end'.format(row))
 		textbox.tag_configure('yellow',  background = "yellow")
 		
-	def insert_error(self, error_type, string, row):
+	def insert_error(self, string, row):
 	
 		textbox.insert('{}.0'.format(row), string)
 		textbox.insert('{}.0'.format(row + 1), "***\n\n")
@@ -31,104 +42,175 @@ class Errors:
 		row += 3
 
 
+parameter_prefix = '2018-12-07 10:53:50> TRACELEVEL : Trace_02 - complete; '
+parameter_type_eng = {
+						0:'o_strWorkingMode',
+						1:'o_strExtractionKitName',
+						2:'o_strPCRKitName',
+						3:' -------- _blnIsSimulationMode = 1',
+						4:'blnLC_Plasma: 1',
+						5:'blnLC_Mites: 1',
+						6:'blnLC_RespSwabs: 1',
+						7:'blnLC_UroSwabs: 1',
+						8:'blnLC_Sputum: 1',
+						9:'blnLC_WBlood: 1',
+						10:'-------- _intNumberOfSamples (+EC) =',
+						11:'-------- _intECNumber =',
+						12:'-------- _fltSampleVolume =',
+						13:'-------- _fltElutionVolume =',
+						14:'-------- o_intSourceSamples = 1',
+						15:'-------- o_intSourceSamples = 2',
+						16:'-------- o_intSourceSamples = 3',
+						17:'-------- _intStartPosExtractionPlate =',
+						18:'-------- _blnElutionInTubes = 1',
+						19:'-------- _blnElutionInExtractionPlate = 1',
+						20:'-------- _blnElutionInPlate96 = ',
+						21:'-------- _intStartPosElutionPlate =',
+						22:'OfPCRControls:',
+						23:'strRBType:',
+						24:'o_intNumberOfECSets'
+}
+parameter_type_rus = {
+						0:'Режим работы: ',
+						1:'Метод экстракции: ',
+						2:'ПЦР набор: ',
+						3:'Симуляция: ',
+						4:'Биоматериал: плазма\n',
+						5:'Биоматериал: клещи\n',
+						6:'Биоматериал: Респираторные мазки\n',
+						7:'Биоматериал: Урогенитальные мазки\n',
+						8:'Биоматериал: Мокрота\n',
+						9:'Биоматериал: цельная кровь\n',
+						10:'Число образцов с контролями: ',
+						11:'Число контролей экстракции: ',
+						12:'Объем образца: ',
+						13:'Объем элюции: ',
+						14:'Исходная пробирка: эппендорф\n',
+						15:'Исходная пробирка: вакутейнер13\n',
+						16:'Исходная пробирка: вакутейнер16\n',
+						17:'Стартовая позиция экстракции: ',
+						18:'Элюция в пробирки\n',
+						19:'Элюат на магните\n',
+						20:'Элюция в микроплашку',
+						21:'Стартовая позиция элюции: ',
+						22:'Число контролей ПЦР: ',
+						23:'Реакционный блок: ',
+						24:'Число реакционных блоков: '
+}
+			
+counterlist = []					
+class Parameters:
+	def insert_parameter(self, string, row):
+		#pass
+		textbox2.insert('{}.0'.format(row),
+						'{}'.format(parameter_type_rus[row] + str(string[len(parameter_prefix) + len(parameter_type_eng[row])+2:]))
+		)
+		row += 1
 
 ### Buttons Functions
 #Load file and see bugs
 def initial_parameters(filename):
 	textbox2.delete('1.0', 'end')
 	#textbox2.insert(INSERT, 'Info:\n\n')
-	stringNum = 1
+	
 	logfile = open(filename, 'rt', encoding='latin1')
-	counter1 = 0
-	counter2 = 0
-	counter3 = 0
-	counter4 = 0
+	#counter1 = 0
+	#counter2 = 0
+	#counter3 = 0
+	#counter4 = 0
+	parameter_type = Parameters()
+	#parameter_type.insert_parameter('lolololoololololololoolololololololololololollololololololololololololololololol', 1)
 	for line in logfile:
-		
-		
-		if 'TRACELEVEL : Trace_02 - complete; o_strWorkingMode' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Режим работы'+line[71:])
-		if 'TRACELEVEL : Trace_02 - complete; o_strExtractionKitName' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Метод экстракции'+line[77:])
-		if 'TRACELEVEL : Trace_02 - complete; o_strPCRKitName' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'ПЦР набор'+line[70:])
-		if 'TRACELEVEL : Trace_02 - complete; _strMethodName' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Метод'+line[69:])
-		if 'TRACELEVEL : Trace_02 - complete;  -------- _blnIsSimulationMode = 1' in line and counter1 != 1:
-			textbox2.insert('{}.1'.format(stringNum), 'Симуляция включена\n')
-			counter1 = 1	
+		pass
+		for num in range(len(parameter_type_eng)):
+			if parameter_type_eng[num] in line:
+				if num not in counterlist:
+					parameter_type.insert_parameter(line, num)
+					counterlist.append(num)
+		#for stringNum 
+		#if 'TRACELEVEL : Trace_02 - complete; o_strWorkingMode' in line:
+		#	textbox2.insert('{}.1'.format(stringNum), 'Режим работы'+line[71:])
+		#if 'TRACELEVEL : Trace_02 - complete; o_strExtractionKitName' in line:
+		#	textbox2.insert('{}.1'.format(stringNum), 'Метод экстракции'+line[77:])
+		# if 'TRACELEVEL : Trace_02 - complete; o_strPCRKitName' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'ПЦР набор'+line[70:])
+		# if 'TRACELEVEL : Trace_02 - complete; _strMethodName' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Метод'+line[69:])
+		#if 'TRACELEVEL : Trace_02 - complete;  -------- _blnIsSimulationMode = 1' in line and counter1 != 1:
+		#	textbox2.insert('{}.1'.format(stringNum), 'Симуляция включена\n')
+		#	counter1 = 1	
 			
 			
-		if 'TRACELEVEL : Trace_02 - complete; blnLC_Plasma: 1' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Биоматериал: плазма\n')
-		if 'TRACELEVEL : Trace_02 - complete; blnLC_Mites: 1' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Биоматериал: клещи\n')
-		if 'TRACELEVEL : Trace_02 - complete; blnLC_RespSwabs: 1' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Биоматериал: Респираторные мазки\n')
-		if 'TRACELEVEL : Trace_02 - complete; blnLC_UroSwabs: 1' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Биоматериал: Урогенитальные мазки\n')
-		if 'TRACELEVEL : Trace_02 - complete; blnLC_Sputum: 1' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Биоматериал: Мокрота\n')
-		if 'TRACELEVEL : Trace_02 - complete; blnLC_WBlood: 1' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Биоматериал: цельная кровь\n')
-			
-			
-			
-		if 'TRACELEVEL : Trace_02 - complete;  -------- _intNumberOfSamples (+EC) =' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Число образцов с контролями:'+ line[92:])	
-		if 'TRACELEVEL : Trace_02 - complete;  -------- _intECNumber =' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Число контролей экстракции:'+line[79:])
-			
-		if 'TRACELEVEL : Trace_02 - complete;  -------- _fltSampleVolume =' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Объем образца:'+line[83:])
-		if 'TRACELEVEL : Trace_02 - complete;  -------- _fltElutionVolume =' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Объем элюции:'+line[84:])
-			
-		if 'TRACELEVEL : Trace_02 - complete;  -------- o_intSourceSamples = 1' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Исходная пробирка: эппендорф\n')
-		if 'TRACELEVEL : Trace_02 - complete;  -------- o_intSourceSamples = 2' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Исходная пробирка: вакутейнер13\n')		
-		if 'TRACELEVEL : Trace_02 - complete;  -------- o_intSourceSamples = 3' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Исходная пробирка: вакутейнер16\n')
-			
-		if 'TRACELEVEL : Trace_02 - complete;  -------- _intStartPosExtractionPlate =' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Стартовая позиция экстракции:'+line[94:])
+		# if 'TRACELEVEL : Trace_02 - complete; blnLC_Plasma: 1' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Биоматериал: плазма\n')
+		# if 'TRACELEVEL : Trace_02 - complete; blnLC_Mites: 1' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Биоматериал: клещи\n')
+		# if 'TRACELEVEL : Trace_02 - complete; blnLC_RespSwabs: 1' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Биоматериал: Респираторные мазки\n')
+		# if 'TRACELEVEL : Trace_02 - complete; blnLC_UroSwabs: 1' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Биоматериал: Урогенитальные мазки\n')
+		# if 'TRACELEVEL : Trace_02 - complete; blnLC_Sputum: 1' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Биоматериал: Мокрота\n')
+		# if 'TRACELEVEL : Trace_02 - complete; blnLC_WBlood: 1' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Биоматериал: цельная кровь\n')
 			
 			
 			
-		if 'TRACELEVEL : Trace_02 - complete;  -------- _blnElutionInTubes = 1' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Элюция в пробирки\n')
-		if 'TRACELEVEL : Trace_02 - complete;  -------- _blnElutionInExtractionPlate = 1' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Элюат на магните\n')
-		if 'TRACELEVEL : Trace_02 - complete;  -------- _blnElutionInPlate96 = 1' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Элюция в микроплашку\n')	
+		# if 'TRACELEVEL : Trace_02 - complete;  -------- _intNumberOfSamples (+EC) =' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Число образцов с контролями:'+ line[92:])	
+		# if 'TRACELEVEL : Trace_02 - complete;  -------- _intECNumber =' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Число контролей экстракции:'+line[79:])
+			
+		# if 'TRACELEVEL : Trace_02 - complete;  -------- _fltSampleVolume =' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Объем образца:'+line[83:])
+		# if 'TRACELEVEL : Trace_02 - complete;  -------- _fltElutionVolume =' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Объем элюции:'+line[84:])
+			
+		# if 'TRACELEVEL : Trace_02 - complete;  -------- o_intSourceSamples = 1' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Исходная пробирка: эппендорф\n')
+		# if 'TRACELEVEL : Trace_02 - complete;  -------- o_intSourceSamples = 2' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Исходная пробирка: вакутейнер13\n')		
+		# if 'TRACELEVEL : Trace_02 - complete;  -------- o_intSourceSamples = 3' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Исходная пробирка: вакутейнер16\n')
+			
+		# if 'TRACELEVEL : Trace_02 - complete;  -------- _intStartPosExtractionPlate =' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Стартовая позиция экстракции:'+line[94:])
+			
+			
+			
+		# if 'TRACELEVEL : Trace_02 - complete;  -------- _blnElutionInTubes = 1' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Элюция в пробирки\n')
+		# if 'TRACELEVEL : Trace_02 - complete;  -------- _blnElutionInExtractionPlate = 1' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Элюат на магните\n')
+		# if 'TRACELEVEL : Trace_02 - complete;  -------- _blnElutionInPlate96 = 1' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Элюция в микроплашку\n')	
 			
 					
-		if 'TRACELEVEL : Trace_02 - complete;  -------- _intStartPosElutionPlate =' in line:
-			textbox2.insert('{}.1'.format(stringNum), 'Стартовая позиция элюции:'+ line[91:])	
+		# if 'TRACELEVEL : Trace_02 - complete;  -------- _intStartPosElutionPlate =' in line:
+			# textbox2.insert('{}.1'.format(stringNum), 'Стартовая позиция элюции:'+ line[91:])	
 			
 			
-		if 'TRACELEVEL : Trace_02 - complete; _intNumberOfPCRControls:' in line and counter2 != 1:
-			textbox2.insert('{}.1'.format(stringNum), 'Число контролей ПЦР: '+line[80:])
-			counter2 = 1
-		if 'TRACELEVEL : Trace_02 - complete; _strRBType:' in line and counter3 != 1:
-			textbox2.insert('{}.1'.format(stringNum), 'Реакционный блок:'+line[66:])
-			counter3 = 1
-		if 'TRACELEVEL : Trace_02 - complete; o_intNumberOfECSets:' in line and counter4 != 1:
-			textbox2.insert('{}.1'.format(stringNum), 'Число реакционных блоков:'+line[75:])
-			counter4 = 1
-		if '' in line:
-			textbox2.insert('{}.1'.format(stringNum), '')			
+		# if 'TRACELEVEL : Trace_02 - complete; _intNumberOfPCRControls:' in line and counter2 != 1:
+			# textbox2.insert('{}.1'.format(stringNum), 'Число контролей ПЦР: '+line[80:])
+			# counter2 = 1
+		# if 'TRACELEVEL : Trace_02 - complete; _strRBType:' in line and counter3 != 1:
+			# textbox2.insert('{}.1'.format(stringNum), 'Реакционный блок:'+line[66:])
+			# counter3 = 1
+		# if 'TRACELEVEL : Trace_02 - complete; o_intNumberOfECSets:' in line and counter4 != 1:
+			# textbox2.insert('{}.1'.format(stringNum), 'Число реакционных блоков:'+line[75:])
+			# counter4 = 1
+		# if '' in line:
+			# textbox2.insert('{}.1'.format(stringNum), '')			
 			
-		stringNum += 1
+		# stringNum += 1
 	
 
 def show_er_codes():
 
 	textbox3.delete('1.0', 'end')
+	#textbox3.insert('1.0', "test")
 	row = 1
 	i = 1
-		
 	for lines in textbox.get('1.0', 'end-1c').splitlines():
 		result = re.findall('\d{2,3}'+'/'+'\d{2,3}', lines)
 		
@@ -136,43 +218,46 @@ def show_er_codes():
 			pass
 		else:
 			pos = textbox3.search(result, '1.0', stopindex = END)
+			
 			if pos == '':
+			
 				textbox3.insert('{}.0'.format(row), result)
 				textbox3.insert('{}.0'.format(row+1),  "\n***\n\n")
 				row += 3
-
+	
 
 def print_er_codes():
 		
 	textbox.delete('1.0', 'end')
-	textbox.insert('1.0', erlist.text_import())
+	
+	txtFile = open('error_codes.txt', 'rt')#, encoding='UTF-8').read()
+	txtFile.seek(3) 
+	textbox.insert('1.0', txtFile.read())
 
 def check_errors(filename):
 	textbox.delete('1.0', 'end')
 	
-	i = 1
 	row = 1
-	j = 1
+	k = 0
 	
 	strError = Errors()
 	
 	logfile = open(filename, 'rt', encoding = 'latin1')
+	
+	#logfile = open (filename, 'rt', encoding = 'latin1') as logfile:
+	#	f = logfile.encoding('utf-8')
+		#print (dir(logfile))
+	
+	#text = logfile.read()
+	#logfile.decode('latin1').encode('UTF-8')
+	#print (len(error_type))
 	for line in logfile:
 		if "intErrorID" not in line:
 			if "End method - progress; Object referenced:" not in line:
-				
-				error_type = (  
-								'error', 
-								'Error',
-								'walkaway mode (no dialog)',
-								'Main - error; An error occurred',
-								'Method has been aborted',
-								'Warning'
-				)
-				
-				for k in range(len(error_type)-1):
+
+				for k in range(len(error_type)):
 					if error_type[k] in line:
-						strError.insert_error(error_type[k], line, row)
+						strError.insert_error(line.encode('utf-8'), row)
 						
 		row += 1
 	logfile.close
@@ -192,18 +277,10 @@ def check_log(filename):
 	for lines in logfile:
 		if "intErrorID" not in lines:
 			
-			error_type = (  
-							'error', 
-							'Error',
-							'walkaway mode (no dialog)',
-							'Main - error; An error occurred',
-							'Method has been aborted',
-							'Warning'
-			)
 			
 			for k in range(len(error_type)-1):
 				if error_type[k] in lines:
-					strError.mark_error(error_type[k], row)
+					strError.mark_error(row)
 			row += 1
 			
 	logfile.close	
@@ -239,10 +316,18 @@ def LogBtn(ev):
 
 	global btnValue
 	btnValue = 'Log'
+	
 
 	textbox.delete('1.0', 'end') 
-	textbox.insert('1.0', open(filename, 'rt', encoding='latin1').read())
+	logfile = open (filename, 'rt', encoding='latin1')
 	
+	
+
+	textbox.insert('1.0', open(filename, 'rt', encoding='latin1').read())
+
+		
+		
+		
 	initial_parameters(filename)
 	if btnValue == 'Log':
 		check_log(filename)
@@ -283,13 +368,13 @@ def tsearch(requestString):
 	#try to seach text 'requestString'; if there is no such text - rise error window 
 	#starts with coords finderRowCoord and LetterCoord (initially these coords are 1.0 but they are changing as user moves coursor) 
 	#ends with END index, no case sensitivity
-	print (searchAgain)
+	#print (searchAgain)
 	try:
 	#pos = textbox.search('{}'.format(requestString), '{}.{}'.format(finderRowCoord, finderLetterCoord), stopindex=END, nocase = 1)
 		start = '{}.{}'.format(finderRowCoord,finderLetterCoord)
 		pos = textbox.search('{}'.format(requestString), start, stopindex=END)#, nocase =1)
 		pos_coords = pos.split(".")
-		print (pos_coords)
+		#print (pos_coords)
 		
 		#text found, coords are defined, try to set up a tag but before delete tags from previous search: (tag_name, start_coord, end_coord)
 		textbox.tag_delete('found_text')	
@@ -319,7 +404,7 @@ def tsearch(requestString):
 		error.focus_force()
 		error.title('red alert')
 		error.geometry('200x50')
-		message = Label(error, text='text was not found')
+		message = Label(error, text='text wasn\'t found')
 		message.pack()
 		
 		okBtn = Button(error, text='Ok')
@@ -328,8 +413,7 @@ def tsearch(requestString):
 		okBtn.focus_set()
 		okBtn.bind('<Key>', destroy_error)
 		okBtn.bind('<Button-1>', destroy_error)
-		error.mainloop()
-			
+		
 def tsearch_reverse(requestString):
 	global finderLetterCoord
 	global finderRowCoord
@@ -372,7 +456,7 @@ def tsearch_reverse(requestString):
 		error.focus_force()
 		error.title('red alert')
 		error.geometry('200x50')
-		message = Label(error, text='text was not found')
+		message = Label(error, text='text wasn\'t found')
 		message.pack()
 		searchAgain = False
 		okBtn = Button(error, text='Ok')
@@ -381,17 +465,14 @@ def tsearch_reverse(requestString):
 		error_name = error	
 		okBtn.bind('<Key>', destroy_error)
 		okBtn.bind('<Button-1>', destroy_error)
-		error.mainloop()
-			
-
+		
 def destroy_error(event):
 		global error_name
 		global searchAgain
 		searchAgain = True
-		#print ('destroy'+str(searchAgain))
-		error_name.destroy()
 		
-				
+		error_name.destroy()
+			
 def findString(event):
 	requestString =  requestField.get()
 	global searchAgain
@@ -410,8 +491,7 @@ def findString(event):
 	else:
 		finderRowCoord = 1
 		finderLetterCoord = 0
-		
-		
+			
 def findString_reverse(event):
 	requestString =  requestField.get()
 	global searchAgain
@@ -431,7 +511,6 @@ def findString_reverse(event):
 		finderRowCoord = 1
 		finderLetterCoord = 0
 
-	
 def createFinder(event):
 	global finderLetterCoord
 	global finderRowCoord
@@ -561,7 +640,7 @@ def hullo(event):
 	global ctrlCounter
 	if event.keysym == 'Control_L':
 		ctrlCounter = True
-		#print (ctrlCounter)
+
 	else:
 		pass
 	if ctrlCounter == True:	
@@ -585,7 +664,7 @@ textbox.bind('<Control-F>', createFinder)
 #textbox.bind('<Key>', prntKey)
 #textbox.bind('<Return>', )
 
-#блок для открытия файлов программой (open with)
+#блок для открытия файлов программой  (open with)
 if len(sys.argv) > 1:
 	try:
 		path = sys.argv[1]
