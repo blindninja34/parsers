@@ -6,8 +6,6 @@ import encodings
 import os, sys
 
 ###  VARIABLES
-
-
 global requestString
 global requestField
 global searchAgain
@@ -69,6 +67,8 @@ parameter_type_eng = {
 						22:'OfPCRControls:',
 						23:'strRBType:',
 						24:'o_intNumberOfECSets'
+						#add here any specific variable to be found in text and put into init params textbox2
+						#put russian name in nex dict
 }
 parameter_type_rus = {
 						0:'Режим работы: ',
@@ -97,8 +97,8 @@ parameter_type_rus = {
 						23:'Реакционный блок: ',
 						24:'Число реакционных блоков: '
 }
-			
-counterlist = []					
+		
+counterlist = [] #couter array for initial_parameters function
 class Parameters:
 	def insert_parameter(self, string, row):
 		#pass
@@ -108,107 +108,22 @@ class Parameters:
 		row += 1
 
 ### Buttons Functions
-#Load file and see bugs
 def initial_parameters(filename):
 	textbox2.delete('1.0', 'end')
-	#textbox2.insert(INSERT, 'Info:\n\n')
-	
 	logfile = open(filename, 'rt', encoding='latin1')
-	#counter1 = 0
-	#counter2 = 0
-	#counter3 = 0
-	#counter4 = 0
 	parameter_type = Parameters()
-	#parameter_type.insert_parameter('lolololoololololololoolololololololololololollololololololololololololololololol', 1)
+
 	for line in logfile:
 		pass
 		for num in range(len(parameter_type_eng)):
 			if parameter_type_eng[num] in line:
 				if num not in counterlist:
 					parameter_type.insert_parameter(line, num)
-					counterlist.append(num)
-		#for stringNum 
-		#if 'TRACELEVEL : Trace_02 - complete; o_strWorkingMode' in line:
-		#	textbox2.insert('{}.1'.format(stringNum), 'Режим работы'+line[71:])
-		#if 'TRACELEVEL : Trace_02 - complete; o_strExtractionKitName' in line:
-		#	textbox2.insert('{}.1'.format(stringNum), 'Метод экстракции'+line[77:])
-		# if 'TRACELEVEL : Trace_02 - complete; o_strPCRKitName' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'ПЦР набор'+line[70:])
-		# if 'TRACELEVEL : Trace_02 - complete; _strMethodName' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Метод'+line[69:])
-		#if 'TRACELEVEL : Trace_02 - complete;  -------- _blnIsSimulationMode = 1' in line and counter1 != 1:
-		#	textbox2.insert('{}.1'.format(stringNum), 'Симуляция включена\n')
-		#	counter1 = 1	
-			
-			
-		# if 'TRACELEVEL : Trace_02 - complete; blnLC_Plasma: 1' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Биоматериал: плазма\n')
-		# if 'TRACELEVEL : Trace_02 - complete; blnLC_Mites: 1' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Биоматериал: клещи\n')
-		# if 'TRACELEVEL : Trace_02 - complete; blnLC_RespSwabs: 1' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Биоматериал: Респираторные мазки\n')
-		# if 'TRACELEVEL : Trace_02 - complete; blnLC_UroSwabs: 1' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Биоматериал: Урогенитальные мазки\n')
-		# if 'TRACELEVEL : Trace_02 - complete; blnLC_Sputum: 1' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Биоматериал: Мокрота\n')
-		# if 'TRACELEVEL : Trace_02 - complete; blnLC_WBlood: 1' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Биоматериал: цельная кровь\n')
-			
-			
-			
-		# if 'TRACELEVEL : Trace_02 - complete;  -------- _intNumberOfSamples (+EC) =' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Число образцов с контролями:'+ line[92:])	
-		# if 'TRACELEVEL : Trace_02 - complete;  -------- _intECNumber =' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Число контролей экстракции:'+line[79:])
-			
-		# if 'TRACELEVEL : Trace_02 - complete;  -------- _fltSampleVolume =' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Объем образца:'+line[83:])
-		# if 'TRACELEVEL : Trace_02 - complete;  -------- _fltElutionVolume =' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Объем элюции:'+line[84:])
-			
-		# if 'TRACELEVEL : Trace_02 - complete;  -------- o_intSourceSamples = 1' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Исходная пробирка: эппендорф\n')
-		# if 'TRACELEVEL : Trace_02 - complete;  -------- o_intSourceSamples = 2' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Исходная пробирка: вакутейнер13\n')		
-		# if 'TRACELEVEL : Trace_02 - complete;  -------- o_intSourceSamples = 3' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Исходная пробирка: вакутейнер16\n')
-			
-		# if 'TRACELEVEL : Trace_02 - complete;  -------- _intStartPosExtractionPlate =' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Стартовая позиция экстракции:'+line[94:])
-			
-			
-			
-		# if 'TRACELEVEL : Trace_02 - complete;  -------- _blnElutionInTubes = 1' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Элюция в пробирки\n')
-		# if 'TRACELEVEL : Trace_02 - complete;  -------- _blnElutionInExtractionPlate = 1' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Элюат на магните\n')
-		# if 'TRACELEVEL : Trace_02 - complete;  -------- _blnElutionInPlate96 = 1' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Элюция в микроплашку\n')	
-			
-					
-		# if 'TRACELEVEL : Trace_02 - complete;  -------- _intStartPosElutionPlate =' in line:
-			# textbox2.insert('{}.1'.format(stringNum), 'Стартовая позиция элюции:'+ line[91:])	
-			
-			
-		# if 'TRACELEVEL : Trace_02 - complete; _intNumberOfPCRControls:' in line and counter2 != 1:
-			# textbox2.insert('{}.1'.format(stringNum), 'Число контролей ПЦР: '+line[80:])
-			# counter2 = 1
-		# if 'TRACELEVEL : Trace_02 - complete; _strRBType:' in line and counter3 != 1:
-			# textbox2.insert('{}.1'.format(stringNum), 'Реакционный блок:'+line[66:])
-			# counter3 = 1
-		# if 'TRACELEVEL : Trace_02 - complete; o_intNumberOfECSets:' in line and counter4 != 1:
-			# textbox2.insert('{}.1'.format(stringNum), 'Число реакционных блоков:'+line[75:])
-			# counter4 = 1
-		# if '' in line:
-			# textbox2.insert('{}.1'.format(stringNum), '')			
-			
-		# stringNum += 1
-	
+					counterlist.append(num)	
 
 def show_er_codes():
 
 	textbox3.delete('1.0', 'end')
-	#textbox3.insert('1.0', "test")
 	row = 1
 	i = 1
 	for lines in textbox.get('1.0', 'end-1c').splitlines():
@@ -243,14 +158,7 @@ def check_errors(filename):
 	strError = Errors()
 	
 	logfile = open(filename, 'rt', encoding = 'latin1')
-	
-	#logfile = open (filename, 'rt', encoding = 'latin1') as logfile:
-	#	f = logfile.encoding('utf-8')
-		#print (dir(logfile))
-	
-	#text = logfile.read()
-	#logfile.decode('latin1').encode('UTF-8')
-	#print (len(error_type))
+
 	for line in logfile:
 		if "intErrorID" not in line:
 			if "End method - progress; Object referenced:" not in line:
@@ -292,8 +200,6 @@ def LoadFile(ev):
 	global btnValue
 	btnValue = 'Load'
 
-	
-	#filename = tkinter.filedialog.Open(root, filetypes = [('*.txt files', '.txt'), ('*.trc files', '.trc')]).show()
 	dialog = filedialog.Open(root, filetypes = [('*.trc files', '.trc')])
 	filename = dialog.show()
 	print (filename)
@@ -317,16 +223,9 @@ def LogBtn(ev):
 	global btnValue
 	btnValue = 'Log'
 	
-
 	textbox.delete('1.0', 'end') 
 	logfile = open (filename, 'rt', encoding='latin1')
-	
-	
-
 	textbox.insert('1.0', open(filename, 'rt', encoding='latin1').read())
-
-		
-		
 		
 	initial_parameters(filename)
 	if btnValue == 'Log':
@@ -342,7 +241,7 @@ def BugBtn(ev):
 	global btnValue
 	btnValue = 'Bug'
 	textbox.delete('1.0', 'end') 
-	textbox.insert('1.0', open(filename, 'rt', encoding='latin1').read())
+	textbox.insert('1.0', open(filename,'rt', encoding='latin1').read())
 	initial_parameters(filename)
 	if btnValue == 'Bug':
 		check_errors(filename)
@@ -354,40 +253,42 @@ def ErlstBtn(ev):
 		initial_parameters(filename)
 	except Exception as ex:
 		print(ex)
-	#show_er_codes()
 	print_er_codes()
 		
 	textbox.mark_set('insert', '1.0')
 	textbox.focus()
-#функция поиска текста, его выделения тэгом, установка курсора в начало слова, перемещение скроллбара
-def tsearch(requestString):
-	global finderLetterCoord
+
+def tsearch(requestString): #try to seach text 'requestString'; if there is no such text - rise error window 
+	global finderLetterCoord #starts with coords finderRowCoord and LetterCoord (initially these coords are 1.0 but they are changing as user moves coursor) 
 	global finderRowCoord
 	global pos_coords
 	global searchAgain
-	#try to seach text 'requestString'; if there is no such text - rise error window 
-	#starts with coords finderRowCoord and LetterCoord (initially these coords are 1.0 but they are changing as user moves coursor) 
-	#ends with END index, no case sensitivity
-	#print (searchAgain)
+	
 	try:
 	#pos = textbox.search('{}'.format(requestString), '{}.{}'.format(finderRowCoord, finderLetterCoord), stopindex=END, nocase = 1)
 		start = '{}.{}'.format(finderRowCoord,finderLetterCoord)
-		pos = textbox.search('{}'.format(requestString), start, stopindex=END)#, nocase =1)
+		pos = textbox.search(
+							'{}'.format(requestString),
+							start,
+							stopindex=END,  #ends with END index, no case sensitivity
+							nocase =1
+		)
 		pos_coords = pos.split(".")
-		#print (pos_coords)
-		
-		#text found, coords are defined, try to set up a tag but before delete tags from previous search: (tag_name, start_coord, end_coord)
-		textbox.tag_delete('found_text')	
-		textbox.tag_add('found_text','{}'.format(pos), '{}.{}'.format(pos_coords[0], int(pos_coords[1])+len(requestString)))
-		#color of found text is ccff99 - lblue
-		textbox.tag_configure('found_text', background = "#ccff99")
-		#move coursor to the beginning of found text and focus on textbox to move scrollbar
-		#scrollbar move has a shift of 5 rows, but if there is no 5 vacation rows script just passes it
-		textbox.mark_set('insert', '{}'.format(pos))
-	
+
+		textbox.tag_delete('found_text')    #text found, coords are defined, try to set up a tag but before delete tags from previous search: (tag_name, start_coord, end_coord)
+		textbox.tag_add(
+						'found_text','{}'.format(pos),
+						'{}.{}'.format(
+										pos_coords[0],
+										mint(pos_coords[1])+len(requestString)
+						)
+		)
+		textbox.tag_configure('found_text', background = "#ccff99")		#color of found text is ccff99 - lblue
+		textbox.mark_set('insert', '{}'.format(pos))    #move coursor to the beginning of found text and focus on textbox to move scrollbar
 		textbox.focus()
+		
 		try:
-			scrollbar.config(command=textbox.yview('{}.0'.format(int(pos_coords[0])-5)))
+			scrollbar.config(command=textbox.yview('{}.0'.format(int(pos_coords[0])-5)))#scrollbar move has a shift of 5 rows, but if there is no 5 vacation rows script just passes it
 		except:
 			pass
 	except:
@@ -443,7 +344,11 @@ def tsearch_reverse(requestString):
 		textbox.mark_set('insert', '{}'.format(pos))
 		textbox.focus()
 		try:
-			scrollbar.config(command=textbox.yview('{}.0'.format(int(pos_coords[0])-5)))
+			scrollbar.config(
+							command=textbox.yview(
+													'{}.0'.format(int(pos_coords[0])-5)
+							)
+			)
 		except:
 			pass
 	except:
@@ -543,7 +448,11 @@ def createFinder(event):
 
 	previousBtn = Button (panelFinder2, text = 'Previous')
 	nextBtn = Button (panelFinder2, text='Next')
-	cancelBtn = Button (panelFinder2, text='Cancel', command = searchWindow.destroy)
+	cancelBtn = Button (
+						panelFinder2,
+						text='Cancel',
+						command = searchWindow.destroy
+	)
 	
 	requestField.bind('<Return>', findString)
 	requestField.bind('<KP_Enter>', findString)
@@ -556,11 +465,14 @@ def createFinder(event):
 	previousBtn.pack(side=RIGHT)
 	nextBtn.pack(side=RIGHT)
 	
-	hintText = Label(panelFinder2, text = 'Hint: try Ctrl-F', font='TkDefaultFont 7', fg='#808080')	
+	hintText = Label(
+						panelFinder2,
+						text = 'Hint: try Ctrl-F',
+						font='TkDefaultFont 7',
+						fg='#808080'
+	)	
 	hintText.pack(side = LEFT)
-	
 	requestField.focus()
-	
 	searchWindow.mainloop()
 
 root = Tk()
@@ -568,8 +480,8 @@ root.title('HParser v0.5c')
 root.minsize(800, 500)
 root.state("zoomed")
 #root.update_idletasks()
-root.focus_force()
-#img = PhotoImage(file='hparser.gif')
+root.focus_force() 
+#img = PhotoImage(file='hparser.gif') ПРОБЛЕМА изменения положения кнопок при добавлении иконки
 #root.tk.call('wm', 'iconphoto', root._w, img)
 #root.wm_iconbitmap('')
 
