@@ -1,0 +1,25 @@
+ -------- _blnIsSimulationMode = 1
+o_strWorkingMode
+o_strExtractionKitName
+blnLC_Plasma: 1
+blnLC_Mites: 1
+blnLC_RespSwabs: 1
+blnLC_UroSwabs: 1
+blnLC_Sputum: 1
+blnLC_WBlood: 1
+-------- o_intSourceSamples = 1
+-------- o_intSourceSamples = 2
+-------- o_intSourceSamples = 3	
+-------- _intNumberOfSamples (+EC) =
+-------- _intECNumber =
+-------- _fltSampleVolume =
+-------- _fltElutionVolume =
+-------- _intStartPosExtractionPlate =
+-------- _blnElutionInTubes = 1
+-------- _blnElutionInExtractionPlate = 1
+-------- _blnElutionInPlate96 = 
+-------- _intStartPosElutionPlate =
+o_strPCRKitName
+OfPCRControls:
+strRBType:
+o_intNumberOfECSets
